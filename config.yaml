@@ -1,0 +1,34 @@
+# Cấu hình phòng agent. Tên agent (key) là thứ bạn gõ sau dấu " để gọi: "ga, "vit, "claude
+human_name: Dong
+host: 127.0.0.1
+port: 8765
+max_bot_chain: 8      # tối đa bấy nhiêu tin agent liên tiếp (không có tin của bạn xen vào), quá là hub ngắt
+history_window: 30    # số tin gần nhất gửi cho agent mỗi lần được gọi
+timeout: 120          # giây chờ tối đa giữa hai đoạn stream
+
+agents:
+  ga:
+    adapter: openai_compat            # muse2api và mọi endpoint kiểu OpenAI
+    base_url: http://localhost:8000/v1   # <-- sửa thành địa chỉ muse2api của bạn
+    model: muse                       # <-- sửa theo tên model muse2api cung cấp
+    api_key_env: MUSE_KEY_GA          # tên biến môi trường chứa key (bỏ qua nếu không cần key)
+    persona: Dev backend Spring Boot. Trả lời ngắn, đưa code khi cần.
+  vit:
+    adapter: openai_compat
+    base_url: http://localhost:8000/v1
+    model: muse
+    api_key_env: MUSE_KEY_VIT
+    persona: Reviewer. Soi lỗi, chỉ ra rủi ro, không viết lại cả đoạn code.
+  claude:
+    adapter: anthropic
+    model: claude-sonnet-5-5          # hoặc claude-haiku-5-5 cho nhanh/rẻ, claude-opus-5-5 cho việc khó
+    api_key_env: ANTHROPIC_API_KEY
+    max_tokens: 1024
+    can_call: true                    # false = agent này không được gọi agent khác
+    persona: Kiến trúc sư. Chốt phương án khi mọi người bất đồng.
+  # Ví dụ model local qua Ollama:
+  # local:
+  #   adapter: openai_compat
+  #   base_url: http://localhost:11434/v1
+  #   model: qwen2.5
+  #   persona: Tóm tắt thảo luận.
